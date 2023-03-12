@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>北京时间</title>
+    <script>
+      function showTime() {
+        var date = new Date();
+        var weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+        var weekDay = weekDays[date.getDay()];
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        var hour = date.getHours();
+        var minute = date.getMinutes();
+        minute = minute < 10 ? '0' + minute : minute;
+        var time = hour + ':' + minute;
+        var dateStr = month + '月' + day + '日 ';
+        document.getElementById('clock').innerHTML = '<div>' + time + '</div><div class="date">' + dateStr + '<span>' + weekDay + '</span></div>';
+      }
+      setInterval(showTime, 1000);
+
+      function getWeather() {
+  fetch('https://devapi.qweather.com/v7/weather/now?location=101200101&key=YOUR_KEY')
+    .then(response => response.json())
+    .then(data => {
+      const temp = data.now.temp;
+      const text = data.now.text;
+      document.getElementById('weather').innerHTML = temp + '℃ ' + text;
+    })
+    .catch(() => {
+      document.getElementById('weather').innerHTML = '天气更新中';
+    });
+}
+
+getWeather();
+setInterval(getWeather, 600000); // 每隔10分钟更新一次
+
+    </script>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+      #clock {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        height: 50vh;
+        font-size: 10vw; /* 相对于视口宽度的 10% */
+        font-weight: bold;
+        text-align: center;
+        font-family: Caecilia, serif;
+      }
+      #clock > div:first-child {
+        margin-bottom: 10px;
+        font-size: 20vw; /* 相对于视口宽度的 20% */
+      }
+      .date {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 5vw; /* 相对于视口宽度的 5% */
+        width: fit-content;
+      }
+      .date > span {
+        margin-left: 1vw; /* 相对于视口宽度的 1% */
+      }
+      #weather {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 8vw; /* 相对于视口宽度的 8% */
+        margin-top: 20px;
+        font-weight: bold;
+        font-family: Caecilia, serif;
+      }
+      #weather > div:first-child {
+        margin-right: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="clock"></div>
+    <div id="weather"></div>
+  </body>
+</html>
